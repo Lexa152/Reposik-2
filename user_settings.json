@@ -1,0 +1,7 @@
+{
+  "file_name": "operations.xlsx",
+  "currencies_from": "https://www.cbr-xml-daily.ru/daily_json.js",
+  "fantiki_from": "https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json",
+  "user_currencies": ["USD", "EUR"],
+  "user_stocks": ["ABRD", "AFLT", "BRZL", "DIOD", "DOMRF"]
+}
