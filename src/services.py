@@ -55,4 +55,4 @@ def cashback(data, year: datetime.year, month: datetime.month):
             wok_kats_s['Остальное'] = round((wok_kats_s['Остальное'] + wok_kats[ik]), 2)
         i += 1
 
-    return json.dumps(wok_kats_s)
+    return json.dumps(wok_kats_s, ensure_ascii=False)
