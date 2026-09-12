@@ -8,11 +8,11 @@ from src.reports import spending_by_category
 
 # читаю настройки из файла настроек:
 setting = readln_setting()
-file_xlsx = setting['file_name'] # txt
-https_moneys = setting['currencies_from'] # txt js
-https_wrappers = setting['fantiki_from'] # txt json
-my_currencies = setting['user_currencies'] # ["USD", "EUR"]
-my_wrappers = setting['user_stocks'] # ["ABRD", "AFLT", "BRZL", "DIOD", "DOMRF"]
+file_xlsx = setting['file_name']  # txt
+https_moneys = setting['currencies_from']  # txt js
+https_wrappers = setting['fantiki_from']  # txt json
+my_currencies = setting['user_currencies']  # ["USD", "EUR"]
+my_wrappers = setting['user_stocks']  # ["ABRD", "AFLT", "BRZL", "DIOD", "DOMRF"]
 
 
 def main_data_viewer(current_datetime: datetime | None = None):
@@ -53,7 +53,8 @@ def main_data_viewer(current_datetime: datetime | None = None):
             kashbk = amount / 100
         # zad 3
         if i <= 4:
-            spis_top_tranz.append({'date': str(time_print), 'amount': round(amount, 2), 'category': str(kat_name), 'description': str(wok_i['my_info'])})
+            spis_top_tranz.append({'date': str(time_print), 'amount': round(amount, 2), 'category': str(kat_name),
+                                   'description': str(wok_i['my_info'])})
         # zad 2
         if kard_num not in spis_card_nums:
             spis_card_nums.append(kard_num)
@@ -65,7 +66,8 @@ def main_data_viewer(current_datetime: datetime | None = None):
 
     spis_card_alldata = []
     for i in spis_card_nums:
-        spis_card_alldata.append({'last_digits': i, 'total_spent': round(card_nums_and_amount[i], 2), 'cashback': round(card_nums_and_kashbk[i], 2)})
+        spis_card_alldata.append({'last_digits': i, 'total_spent': round(card_nums_and_amount[i], 2),
+                                  'cashback': round(card_nums_and_kashbk[i], 2)})
 
     currency_rates = []
     money0 = money(https_moneys, my_currencies)

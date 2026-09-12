@@ -5,7 +5,7 @@ from functools import wraps
 
 
 def save_last_result(filename: str = "last_spending_result.json"):
-    """Сохраняет последний результат функции в JSON-файл."""
+    """ Сохраняет последний результат функции в JSON-файл """
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
