@@ -61,6 +61,7 @@ def spending_by_category(data: [], category: str, report_date: Optional[str] = N
     wok_month[datatime11.strftime("%Y-%m")] = 0
     wok_month[datatime21.strftime("%Y-%m")] = 0
     wok_month[datatime31.strftime("%Y-%m")] = 0
+    wok_month['Всего'] = 0
 
     for i in range(0, len(data)):
         data0 = data[i]
@@ -90,5 +91,6 @@ def spending_by_category(data: [], category: str, report_date: Optional[str] = N
     wok_month[datatime11.strftime("%Y-%m")] = round(wok_month[datatime11.strftime("%Y-%m")], 2)
     wok_month[datatime21.strftime("%Y-%m")] = round(wok_month[datatime21.strftime("%Y-%m")], 2)
     wok_month[datatime31.strftime("%Y-%m")] = round(wok_month[datatime31.strftime("%Y-%m")], 2)
+    wok_month['Всего'] = round(wok_month[datatime11.strftime("%Y-%m")] + wok_month[datatime21.strftime("%Y-%m")] + wok_month[datatime31.strftime("%Y-%m")], 2)
 
     return wok_month

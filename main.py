@@ -16,7 +16,7 @@ my_wrappers = setting['user_stocks'] # ["ABRD", "AFLT", "BRZL", "DIOD", "DOMRF"]
 
 
 def main_data_viewer(current_datetime: datetime | None = None):
-    '''Формирование итогового словаря по задаче Главная из категории Веб'''
+    ''' Формирование итогового словаря по задаче Главная из категории Веб '''
     if current_datetime is None:
         current_datetime = datetime.now()
 
@@ -46,12 +46,14 @@ def main_data_viewer(current_datetime: datetime | None = None):
         amount = wok_i['my_tranz_summa']
         if (amount is None) or (amount > 0):
             amount = 0
+        else:
+            amount = -1 * amount
         kashbk = wok_i['my_kash_bak']
         if kashbk is None:
             kashbk = amount / 100
         # zad 3
         if i <= 4:
-            spis_top_tranz.append({'date': str(time_print), 'amount': str(amount), 'category': str(kat_name), 'description': str(wok_i['my_info'])})
+            spis_top_tranz.append({'date': str(time_print), 'amount': round(amount, 2), 'category': str(kat_name), 'description': str(wok_i['my_info'])})
         # zad 2
         if kard_num not in spis_card_nums:
             spis_card_nums.append(kard_num)
