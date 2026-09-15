@@ -45,10 +45,7 @@ def spending_by_category(data: [], category: str, report_date: Optional[str] = N
 
     datatime31 = datetime(report_date_d.year - 0, (int(report_date_d.month) - 0 +  0), 1, 0, 0, 0)
 
-    if (int(report_date_d.month) + 1) > 12:
-        datatime32 = datetime(report_date_d.year + 1, 1, 1, 0, 0, 0)
-    else:
-        datatime32 = datetime(report_date_d.year + 0, (int(report_date_d.month) + 1), 1, 0, 0, 0)
+    datatime32 = report_date_d
 
     datatime22 = datetime(report_date_d.year, int(report_date_d.month), 1, 0, 0, 0)
 
