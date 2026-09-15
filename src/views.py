@@ -28,7 +28,7 @@ def torg_news(www_torg, torg_list):
 
 
 def money(https_wrappers, my_wrappers):
-    """ Получает курсы валют и возвращает словарьwww_money, money_list """
+    """ Получает курсы валют и возвращает словарь """
     try:
         resp = requests.get(https_wrappers, timeout=10)
         resp.raise_for_status()

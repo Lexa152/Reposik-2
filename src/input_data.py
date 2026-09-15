@@ -124,7 +124,7 @@ def filter_by_state(data, state="OK"):
 
 def sort_by_date(data, reverse=True):
     """
-    Сортировка данных по дате туда-сюда
+    Сортировка данных по дате
     """
     def parse_date(item):
         if not isinstance(item, dict):
