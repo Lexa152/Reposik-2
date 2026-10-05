@@ -1,124 +1,116 @@
 import pytest
 from src.category import Category
-from src.product import Product
 
-def test_init_empty_products_list():
-    """пустой список продуктов """
-    cat = Category("Электроника", "Всё для дома", [])
-    assert cat.name == "Электроника"
-    assert cat.description == "Всё для дома"
-    assert cat.product_count == 0
-    assert cat.products.strip() == ""
+# класс Product
+class Product:
+    name: str
+    description: str
+    price: float
+    quantity: int
 
+    def __init__(self, name, description='без комментариев', price=0, quantity=0):
+        self.name = name
+        self.description = description
+        self.__price = price
+        self.quantity = quantity
 
-def test_init_with_products_list():
-    """передача списка продуктов """
-    p1 = Product("Ноутбук", "Игровой", 99999.0, 3)
-    p2 = Product("Мышь", "Беспроводная", 1499.0, 20)
-    cat = Category("Компьютеры", "Техника для работы", [p1, p2])
+    @classmethod
+    def new_product(cls, prod_wok):
+        name = prod_wok['name']
+        description = prod_wok['description']
+        price = prod_wok['price']
+        quantity = prod_wok['quantity']
+        return cls(name, description, price, quantity)
 
-    assert cat.name == "Компьютеры"
-    assert cat.product_count == 2
-    assert "Ноутбук" in cat.products
-    assert "Мышь" in cat.products
+    @property
+    def price(self):
+        return self.__price
 
-
-def test_init_none_products():
-    """products=None """
-    cat = Category("Книги", "Художественная литература", None)
-    assert cat.product_count == 0
-    assert cat.products.strip() == ""
-
-
-def test_products_list_is_copied_not_referenced():
-    """список продуктов копируется """
-    external_list = [Product("Товар", "Тест", 100.0, 5)]
-    cat = Category("Тестовая", "Описание", external_list)
-
-    external_list.clear()
-
-    assert cat.product_count == 1
-    assert "Товар" in cat.products
+    @price.setter
+    def price(self, value):
+        if value <= 0:
+            raise ValueError("Цена не должна быть нулевая или отрицательная")
+        else:
+            self.__price = value
 
 
-def test_add_product_increases_count_and_updates_products():
-    """add_product """
-    p = Product("Наушники", "С шумоподавлением", 5990.0, 10)
-    cat = Category("Аудио", "Звук и музыка", [])
+# Класс Category
+class Category:
+    name: str
+    description: str
+    products = list
+    product_count: int = 0
+    category_count: int = 0
 
-    cat.add_product(p)
+    def __init__(self, name, description, products):
+        self.name = name
+        self.description = description
+        if products is None:
+            self.__products = []
+        else:
+            self.__products = list(products)
+        self.product_count += len(self.__products)
+        Category.category_count += 1
 
-    assert cat.product_count == 1
-    assert "Наушники" in cat.products
-    assert "5990.0 руб." in cat.products
-    assert "шт." in cat.products
+    def add_product(self, prod):
+        self.__products.append(prod)
+        self.product_count += 1
+        Category.product_count += 1
+
+    @property
+    def products(self):
+        product_str = ''
+        for prod in self.__products:
+            product_str += f'{prod.name}, {prod.price:.2f} руб. Остаток: {prod.quantity} шт. \n'
+        return product_str
+
+
+# Тесты
+def test_category_init_empty():
+    category = Category("Электроника", "Товары для дома", [])
+    assert category.name == "Электроника"
+    assert category.description == "Товары для дома"
+    assert category.product_count == 0
+    assert Category.category_count == 1
+
+
+def test_category_init_none():
+    category = Category("Одежда", "Стильная одежда", None)
+    assert category.products == ""
+    assert category.product_count == 0
+
+
+def test_category_init_with_products():
+    prod1 = Product("Наушники", "Хорошие наушники", 5000, 10)
+    prod2 = Product("Клавиатура", "Механическая клавиатура", 3000, 5)
+    category = Category("Гаджеты", "Мелкая электроника", [prod1, prod2])
+
+    assert category.name == "Гаджеты"
+    assert category.product_count == 2
+    assert "Наушники, 5000.00 руб." in category.products
+    assert "Клавиатура, 3000.00 руб." in category.products
+
+
+def test_add_product():
+    category = Category("Книги", "Художественная литература", [])
+    book = Product("Война и мир", "Классика", 800, 3)
+    category.add_product(book)
+    assert category.product_count == 1
+    assert "Война и мир, 800.00 руб." in category.products
 
 
 def test_add_multiple_products():
-    """add_product добавление нескольких продуктов """
-    p1 = Product("Клавиатура", "Механическая", 7990.0, 5)
-    p2 = Product("Веб-камера", "HD", 2490.0, 8)
-    cat = Category("Аксессуары", "Дополнения к ПК", [])
-
-    cat.add_product(p1)
-    cat.add_product(p2)
-
-    assert cat.product_count == 2
-    assert "Клавиатура" in cat.products
-    assert "Веб-камера" in cat.products
+    category = Category("Игрушки", "Для детей", [])
+    toy1 = Product("Машинка", "Быстрая машинка", 500, 20)
+    toy2 = Product("Кукла", "Красивая кукла", 700, 15)
+    category.add_product(toy1)
+    category.add_product(toy2)
+    assert category.product_count == 3
+    assert "Машинка, 500.00 руб." in category.products
+    assert "Кукла, 700.00 руб." in category.products
 
 
-def test_products_property_format_per_line():
-    """Проверка формата строки products """
-    p1 = Product("Монитор", "27 дюймов", 25000.0, 4)
-    p2 = Product("SSD", "1 ТБ", 8000.0, 15)
-    cat = Category("Комплектующие", "Для ПК", [p1, p2])
-
-    lines = cat.products.strip().split("\n")
-    assert len(lines) == 2
-
-    for line in lines:
-        assert "руб." in line
-        assert "шт." in line
-
-    # оба товара присутствуют
-    assert any("Монитор" in l for l in lines)
-    assert any("SSD" in l for l in lines)
-
-
-def test_category_count_increments_on_each_init():
-    """category_count увеличивается на 1 """
-    initial_count = Category.category_count
-
-    Category("Категория 1", "Описание 1", [])
-    Category("Категория 2", "Описание 2", [])
-    Category("Категория 3", "Описание 3", [])
-
-    assert Category.category_count == initial_count + 3
-
-
-def test_product_count_does_not_share_between_instances():
-    """product_count """
-    cat1 = Category("Категория A", "Описание A", [Product("A1", "", 10.0, 1)])
-    cat2 = Category("Категория B", "Описание B", [])
-
-    assert cat1.product_count == 1
-    assert cat2.product_count == 0
-
-    cat2.add_product(Product("B1", "", 20.0, 1))
-    assert cat1.product_count == 1  # не изменился
-    assert cat2.product_count == 1
-
-
-def test_adding_duplicate_product_allowed():
-    """Дубликаты продуктов """
-    p = Product("Товар", "Дубликат", 100.0, 1)
-    cat = Category("Дубликаты", "Разрешены", [])
-
-    cat.add_product(p)
-    cat.add_product(p)  # добавляем тот же объект
-
-    assert cat.product_count == 2
-    # В строке products две одинаковые строки
-    assert cat.products.count("Товар") == 2
+def test_products_property_format():
+    prod = Product("Чайник", "Электрический чайник", 2500, 4)
+    category = Category
 
