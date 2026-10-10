@@ -63,3 +63,22 @@ def test_price_setter_invalid_negative():
     p.price = -50
     assert p.price == initial_price
 
+
+def test_add_two_products_with_positive_values():
+    """Сложение двух товаров с обычной ценой и количеством."""
+    p1 = Product("Яблоко", "Свежее", price=100.0, quantity=2)
+    p2 = Product("Банан", "Спелый", price=50.0, quantity=4)
+
+    # Ожидаем: (100 * 2) + (50 * 4) = 200 + 200 = 400
+    result = p1 + p2
+    assert result == 400.0
+
+
+def test_add_product_with_zero_quantity():
+    """Если у одного товара количество 0, его вклад в сумму должен быть 0."""
+    p1 = Product("Торт", "Вкусный", price=1000.0, quantity=1)
+    p2 = Product("Пустышка", "Нет в наличии", price=999.0, quantity=0)
+
+    # Ожидаем только стоимость первого товара: 1000 * 1 = 1000
+    result = p1 + p2
+    assert result == 1000.0
