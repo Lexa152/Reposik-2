@@ -17,7 +17,11 @@ class Product:
 
 
     def __add__(self, other):
-        return (self.__price * self.quantity) + (other.__price * other.quantity)
+        if type(other) is type(self):
+            return (self.__price * self.quantity) + (other.__price * other.quantity)
+        else:
+            raise TypeError
+
 
 
     @classmethod
@@ -42,3 +46,42 @@ class Product:
             print("Цена не должна быть нулевая или отрицательная")
         else:
             self.__price = value
+
+
+class Smartphone(Product):
+    efficiency: float  # производительность
+    model: str  # модель
+    memory: int  # объем встроенной памяти
+    color: str  # цвет
+
+    def __init__(self, name,
+                 description='без комментариев',
+                 price=0,
+                 quantity=0,
+                 efficiency=0,
+                 model='null',
+                 memory=0,
+                 color='null'):
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency
+        self.model = model
+        self.memory = memory
+        self.color = color
+
+
+class LawnGrass(Product):  # «Трава газонная» (LawnGrass)
+    country: str  # страна-производитель
+    germination_period: str  # срок прорастания кол-во дней от посева
+    color: str  # цвет
+
+    def __init__(self, name,
+                 description='без комментариев',
+                 price=0,
+                 quantity=0,
+                 country='null',
+                 germination_period='null',
+                 color='null'):
+        super().__init__(name, description, price, quantity)
+        self.country = country
+        self.germination_period = germination_period
+        self.color = color

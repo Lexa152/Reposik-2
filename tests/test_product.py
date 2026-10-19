@@ -1,84 +1,113 @@
-from src.product import Product
+import pytest
+from src.product import Product, Smartphone, LawnGrass
 
 
-def test_init_default_values():
-    """Проверка значений по умолчанию """
-    p = Product("Товар")
-    assert p.name == "Товар"
+def test_product_init_default_values():
+    p = Product("Чай")
+    assert p.name == "Чай"
     assert p.description == "без комментариев"
     assert p.price == 0
     assert p.quantity == 0
 
 
-def test_init_custom_values():
-    """Проверка передачи всех параметров в конструкторе """
-    p = Product("Кружка", "Керамическая", 299.99, 10)
-    assert p.name == "Кружка"
-    assert p.description == "Керамическая"
-    assert p.price == 299.99
+def test_product_init_with_all_args():
+    p = Product("Кофе", "Арабика", 350.5, 10)
+    assert p.name == "Кофе"
+    assert p.description == "Арабика"
+    assert p.price == 350.5
     assert p.quantity == 10
 
 
-def test_new_product_factory():
-    """Проверка new_product """
+def test_product_str():
+    p = Product("Чай", "Зелёный", 250, 5)
+    result = str(p)
+    assert "Чай" in result
+    assert "250 руб." in result
+    assert "Остаток: 5 шт." in result
+
+
+def test_product_add():
+    p1 = Product("Чай", quantity=2, price=100)
+    p2 = Product("Кофе", quantity=3, price=200)
+    total = p1 + p2
+    assert total == 800
+
+
+def test_product_add_wrong_type():
+    p = Product("Чай", quantity=2, price=100)
+    with pytest.raises(TypeError):
+        _ = p + "строка"
+
+
+def test_product_new_product_factory():
     data = {
-        "name": "Футболка",
-        "description": "Хлопковая",
-        "price": 1499.0,
-        "quantity": 5
+        "name": "Какао",
+        "description": "Порошок",
+        "price": 400,
+        "quantity": 3
     }
     p = Product.new_product(data)
     assert isinstance(p, Product)
-    assert p.name == "Футболка"
-    assert p.description == "Хлопковая"
-    assert p.price == 1499.0
-    assert p.quantity == 5
+    assert p.name == "Какао"
+    assert p.price == 400
+    assert p.quantity == 3
 
 
-def test_price_getter():
-    """Пров геттера price """
-    p = Product("Чайник", "Электрический", 3500.0, 2)
-    assert p.price == 3500.0
+def test_product_price_setter_valid():
+    p = Product("Чай", price=250)
+    p.price = 300
+    assert p.price == 300
 
 
-def test_price_setter_valid():
-    """Пров установки цены через сеттер """
-    p = Product("Ложка", "Серебряная", 0, 1)
-    p.price = 150.5
-    assert p.price == 150.5
+def test_product_price_setter_invalid():
+    p = Product("Чай", price=250)
+    p.price = -10
+    assert p.price == 250
 
 
-def test_price_setter_invalid_zero():
-    """Проверка попытки установить нулевую цену """
-    p = Product("Вилка", "Стальная", 200.0, 3)
-    initial_price = p.price
-    p.price = 0
-    assert p.price == initial_price
+def test_smartphone_init():
+    s = Smartphone(
+        name="Phone X",
+        description="Флагман",
+        price=99900,
+        quantity=2,
+        efficiency=95.5,
+        model="X10",
+        memory=256,
+        color="чёрный"
+    )
+    assert s.name == "Phone X"
+    assert s.price == 99900
+    assert s.quantity == 2
+    assert s.efficiency == 95.5
+    assert s.model == "X10"
+    assert s.memory == 256
+    assert s.color == "чёрный"
 
 
-def test_price_setter_invalid_negative():
-    """Проверка попытки установить отрицательную цену """
-    p = Product("Тарелка", "Фарфоровая", 400.0, 7)
-    initial_price = p.price
-    p.price = -50
-    assert p.price == initial_price
+def test_smartphone_is_instance_of_product():
+    s = Smartphone("Phone X", price=99900)
+    assert isinstance(s, Product)
 
 
-def test_add_two_products_with_positive_values():
-    """Сложение двух товаров с обычной ценой и количеством."""
-    p1 = Product("Яблоко", "Свежее", price=100.0, quantity=2)
-    p2 = Product("Банан", "Спелый", price=50.0, quantity=4)
+def test_lawn_grass_init():
+    g = LawnGrass(
+        name="Газонная трава Премиум",
+        description="Для солнечных участков",
+        price=500,
+        quantity=4,
+        country="Россия",
+        germination_period="7-10 дней",
+        color="зелёный"
+    )
+    assert g.name == "Газонная трава Премиум"
+    assert g.price == 500
+    assert g.quantity == 4
+    assert g.country == "Россия"
+    assert g.germination_period == "7-10 дней"
+    assert g.color == "зелёный"
 
-    # Ожидаем: (100 * 2) + (50 * 4) = 200 + 200 = 400
-    result = p1 + p2
-    assert result == 400.0
 
-
-def test_add_product_with_zero_quantity():
-    """Если у одного товара количество 0, его вклад в сумму должен быть 0."""
-    p1 = Product("Торт", "Вкусный", price=1000.0, quantity=1)
-    p2 = Product("Пустышка", "Нет в наличии", price=999.0, quantity=0)
-
-    # Ожидаем только стоимость первого товара: 1000 * 1 = 1000
-    result = p1 + p2
-    assert result == 1000.0
+def test_lawn_grass_is_instance_of_product():
+    g = LawnGrass("Трава", price=500)
+    assert isinstance(g, Product)

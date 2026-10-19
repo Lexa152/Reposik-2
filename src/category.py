@@ -1,3 +1,5 @@
+from src.product import Product, Smartphone, LawnGrass
+
 class Category:
     name: str
     description: str
@@ -25,8 +27,11 @@ class Category:
 
 
     def add_product(self, prod):
-        self.__products.append(prod)
-        Category.product_count += 1
+        if isinstance(prod, Product):
+            self.__products.append(prod)
+            Category.product_count += 1
+        else:
+            raise TypeError
 
 
     @property
