@@ -17,7 +17,7 @@ def test_category_init_with_products():
     p2 = Product("Преступление и наказание", "Классика", 750, 2)
     category = Category("Книги", "Художественная литература", [p1, p2])
     assert len(category._Category__products) == 2
-    assert Category.product_count == 0
+    assert Category.product_count == 2
     assert Category.category_count == 2
 
 
@@ -26,7 +26,7 @@ def test_add_product_valid():
     smartphone = Smartphone("Phone X", "Смартфон", 99900, 1, "Android", 6.5)
     category.add_product(smartphone)
     assert len(category._Category__products) == 1
-    assert Category.product_count == 1
+    assert Category.product_count == 3
 
 
 def test_add_product_invalid_type():
@@ -34,7 +34,7 @@ def test_add_product_invalid_type():
     with pytest.raises(TypeError):
         category.add_product("не продукт")
     assert len(category._Category__products) == 0
-    assert Category.product_count == 1
+    assert Category.product_count == 3
 
 
 def test_str_representation():

@@ -15,7 +15,7 @@ class Category:
             self.__products = []
         else:
             self.__products = list(products)
-        self.product_count += len(self.__products)
+        Category.product_count += len(self.__products)
         Category.category_count += 1
 
 

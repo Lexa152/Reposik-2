@@ -1,4 +1,13 @@
-class Product:
+from abc import ABC, abstractmethod
+
+class BaseProduct:
+
+    @abstractmethod
+    def metod(self):
+        pass
+
+
+class Product(ABC):
     name: str
     description: str
     price: float
@@ -21,7 +30,6 @@ class Product:
             return (self.__price * self.quantity) + (other.__price * other.quantity)
         else:
             raise TypeError
-
 
 
     @classmethod
