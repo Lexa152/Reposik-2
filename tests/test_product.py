@@ -111,3 +111,29 @@ def test_lawn_grass_init():
 def test_lawn_grass_is_instance_of_product():
     g = LawnGrass("Трава", price=500)
     assert isinstance(g, Product)
+
+
+def test_print_mixin_repr_basic():
+    """Проверяем, что __repr__ возвращает ожидаемую строку для Product."""
+    p = Product("Чай", "Чёрный", 100.0, 5)
+    expected = "Product(Чай, Чёрный, 100.0, 5)"
+    assert repr(p) == expected
+
+
+def test_print_mixin_repr_with_subclasses():
+    """__repr__ должен корректно работать и для подклассов (Smartphone, LawnGrass)."""
+    s = Smartphone(
+        "iPhone", "Флагман", 90000, 2,
+        efficiency=0.9, model="15", memory=256, color="чёрный"
+    )
+    l = LawnGrass(
+        "Газон Люкс", "Для дачи", 500, 10,
+        country="Россия", germination_period="7 дней", color="зелёный"
+    )
+
+    # Проверяем, что в repr есть имя класса и базовые поля
+    assert "Smartphone" in repr(s)
+    assert "iPhone" in repr(s)
+
+    assert "LawnGrass" in repr(l)
+    assert "Газон Люкс" in repr(l)

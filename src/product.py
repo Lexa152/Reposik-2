@@ -1,13 +1,23 @@
 from abc import ABC, abstractmethod
 
-class BaseProduct:
 
+class BaseProduct(ABC):
+
+    @classmethod
     @abstractmethod
-    def metod(self):
+    def new_product(cls, prod_wok):
         pass
 
 
-class Product(ABC):
+class PrintMixin:
+    def after_init(self):
+        print(repr(self))
+
+    def __repr__(self):
+        return f'{self.__class__.__name__}({self.name}, {self.description}, {self.price}, {self.quantity})'
+
+
+class Product(BaseProduct, PrintMixin):
     name: str
     description: str
     price: float
@@ -19,6 +29,7 @@ class Product(ABC):
         self.description = description
         self.__price = price
         self.quantity = quantity
+        self.after_init()
 
 
     def __str__(self):
