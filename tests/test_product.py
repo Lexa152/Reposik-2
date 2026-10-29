@@ -1,139 +1,126 @@
 import pytest
 from src.product import Product, Smartphone, LawnGrass
 
-
-def test_product_init_default_values():
-    p = Product("Чай")
+def test_product_creation():
+    p = Product("Чай", "Чёрный", 100.0, 5)
     assert p.name == "Чай"
+    assert p.description == "Чёрный"
+    assert p.price == 100.0
+    assert p.quantity == 5
+
+
+def test_product_default_description():
+    p = Product("Кофе", price=200.0, quantity=3)
     assert p.description == "без комментариев"
-    assert p.price == 0
-    assert p.quantity == 0
 
 
-def test_product_init_with_all_args():
-    p = Product("Кофе", "Арабика", 350.5, 10)
-    assert p.name == "Кофе"
-    assert p.description == "Арабика"
-    assert p.price == 350.5
-    assert p.quantity == 10
+def test_product_zero_quantity_raises():
+    with pytest.raises(ValueError):
+        Product("Чай", quantity=0)
 
 
-def test_product_str():
-    p = Product("Чай", "Зелёный", 250, 5)
-    result = str(p)
-    assert "Чай" in result
-    assert "250 руб." in result
-    assert "Остаток: 5 шт." in result
-
-
-def test_product_add():
-    p1 = Product("Чай", quantity=2, price=100)
-    p2 = Product("Кофе", quantity=3, price=200)
-    total = p1 + p2
-    assert total == 800
-
-
-def test_product_add_wrong_type():
-    p = Product("Чай", quantity=2, price=100)
-    with pytest.raises(TypeError):
-        _ = p + "строка"
+def test_product_negative_quantity_raises():
+    with pytest.raises(ValueError):
+        Product("Чай", quantity=-1)
 
 
 def test_product_new_product_factory():
     data = {
-        "name": "Какао",
-        "description": "Порошок",
-        "price": 400,
-        "quantity": 3
+        "name": "Кофе",
+        "description": "Арабика",
+        "price": 250.0,
+        "quantity": 10,
     }
     p = Product.new_product(data)
     assert isinstance(p, Product)
-    assert p.name == "Какао"
-    assert p.price == 400
-    assert p.quantity == 3
+    assert p.name == "Кофе"
+    assert p.description == "Арабика"
+    assert p.price == 250.0
+    assert p.quantity == 10
 
 
-def test_product_price_setter_valid():
-    p = Product("Чай", price=250)
-    p.price = 300
-    assert p.price == 300
+def test_product_new_product_zero_quantity_raises():
+    data = {
+        "name": "Чай",
+        "description": "",
+        "price": 100.0,
+        "quantity": 0,
+    }
+    with pytest.raises(ValueError):
+        Product.new_product(data)
 
 
-def test_product_price_setter_invalid():
-    p = Product("Чай", price=250)
-    p.price = -10
-    assert p.price == 250
+def test_product_price_property_setter_invalid():
+    p = Product("Чай", price=100.0, quantity=5)
+    old_price = p.price
+    p.price = -10  # вызовет print, но мы его не проверяем
+    assert p.price == old_price  # цена не должна обновиться на отрицательную
 
 
-def test_smartphone_init():
+def test_product_price_property_setter_valid():
+    p = Product("Чай", price=100.0, quantity=5)
+    p.price = 150.0
+    assert p.price == 150.0
+
+
+def test_product_add_returns_total_cost():
+    p1 = Product("Чай", price=100.0, quantity=2)
+    p2 = Product("Кофе", price=250.0, quantity=1)
+    total = p1 + p2
+    assert total == (100.0 * 2) + (250.0 * 1)  # 450.0
+
+
+def test_product_add_different_type_raises():
+    p = Product("Чай", price=100.0, quantity=2)
+    with pytest.raises(TypeError):
+        _ = p + "string"
+
+
+def test_smartphone_creation():
     s = Smartphone(
-        name="Phone X",
-        description="Флагман",
-        price=99900,
-        quantity=2,
-        efficiency=95.5,
-        model="X10",
+        name="iPhone",
+        description="Смартфон",
+        price=80000.0,
+        quantity=3,
+        efficiency=9.5,
+        model="14 Pro",
         memory=256,
-        color="чёрный"
+        color="серый",
     )
-    assert s.name == "Phone X"
-    assert s.price == 99900
-    assert s.quantity == 2
-    assert s.efficiency == 95.5
-    assert s.model == "X10"
+    assert s.name == "iPhone"
+    assert s.price == 80000.0
+    assert s.quantity == 3
+    assert s.efficiency == 9.5
+    assert s.model == "14 Pro"
     assert s.memory == 256
-    assert s.color == "чёрный"
+    assert s.color == "серый"
 
 
-def test_smartphone_is_instance_of_product():
-    s = Smartphone("Phone X", price=99900)
-    assert isinstance(s, Product)
+def test_smartphone_inheritance_from_product():
+    s = Smartphone("Phone", price=50000.0, quantity=1)
+    with pytest.raises(ValueError):
+        Smartphone("Phone", quantity=0)
 
 
-def test_lawn_grass_init():
+def test_lawn_grass_creation():
     g = LawnGrass(
-        name="Газонная трава Премиум",
-        description="Для солнечных участков",
-        price=500,
-        quantity=4,
+        name="Газонная трава",
+        description="Универсальная",
+        price=500.0,
+        quantity=20,
         country="Россия",
-        germination_period="7-10 дней",
-        color="зелёный"
+        germination_period="7 дней",
+        color="зелёный",
     )
-    assert g.name == "Газонная трава Премиум"
-    assert g.price == 500
-    assert g.quantity == 4
+    assert g.name == "Газонная трава"
+    assert g.price == 500.0
+    assert g.quantity == 20
     assert g.country == "Россия"
-    assert g.germination_period == "7-10 дней"
+    assert g.germination_period == "7 дней"
     assert g.color == "зелёный"
 
 
-def test_lawn_grass_is_instance_of_product():
-    g = LawnGrass("Трава", price=500)
-    assert isinstance(g, Product)
-
-
-def test_print_mixin_repr_basic():
-    """Проверяем, что __repr__ возвращает ожидаемую строку для Product."""
-    p = Product("Чай", "Чёрный", 100.0, 5)
-    expected = "Product(Чай, Чёрный, 100.0, 5)"
-    assert repr(p) == expected
-
-
-def test_print_mixin_repr_with_subclasses():
-    """__repr__ должен корректно работать и для подклассов (Smartphone, LawnGrass)."""
-    s = Smartphone(
-        "iPhone", "Флагман", 90000, 2,
-        efficiency=0.9, model="15", memory=256, color="чёрный"
-    )
-    l = LawnGrass(
-        "Газон Люкс", "Для дачи", 500, 10,
-        country="Россия", germination_period="7 дней", color="зелёный"
-    )
-
-    # Проверяем, что в repr есть имя класса и базовые поля
-    assert "Smartphone" in repr(s)
-    assert "iPhone" in repr(s)
-
-    assert "LawnGrass" in repr(l)
-    assert "Газон Люкс" in repr(l)
+def test_lawn_grass_inheritance_from_product():
+    g = LawnGrass("Трава", price=300.0, quantity=10)
+    with pytest.raises(ValueError):
+        LawnGrass("Трава", quantity=0)

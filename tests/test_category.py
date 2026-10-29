@@ -52,3 +52,20 @@ def test_products_property():
     output = category.products
     assert "Чай" in output
     assert "250 руб." in output
+
+
+def test_category_middle_price_non_empty():
+    p1 = Product("Чай", price=100.0, quantity=5)
+    p2 = Product("Кофе", price=200.0, quantity=3)
+    cat = Category("Напитки", "Горячие", [p1, p2])
+
+    result = cat.middle_price()
+    # среднее по цене (не по стоимости): (100 + 200) / 2 = 150
+    assert "Средний ценник продуктов категории: 150.0 руб." in result or "Средний ценник продуктов категории: 150 руб." in result
+
+
+def test_category_middle_price_empty():
+    cat = Category("Пусто", "Нет товаров", [])
+    result = cat.middle_price()
+    # при делении на ноль вернётся 0 и будет напечатано сообщение (но мы его не проверяем)
+    assert "Средний ценник продуктов категории: 0 руб." in result

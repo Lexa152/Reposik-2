@@ -26,6 +26,20 @@ class Category:
         return f"{self.name}, количество продуктов: {total} шт."
 
 
+    def middle_price(self):
+        total_price = 0
+        total_quantity = 0
+        for p in self.__products:
+            total_price += p.price
+            total_quantity += 1
+        try:
+            result = round(total_price / total_quantity, 0)
+        except ZeroDivisionError:
+            print('попытка деления на ноль')
+            result = 0
+        return f"Средний ценник продуктов категории: {result} руб."
+
+
     def add_product(self, prod):
         if isinstance(prod, Product):
             self.__products.append(prod)

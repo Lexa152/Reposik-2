@@ -28,7 +28,12 @@ class Product(BaseProduct, PrintMixin):
         self.name = name
         self.description = description
         self.__price = price
-        self.quantity = quantity
+
+        if quantity > 0:
+            self.quantity = quantity
+        else:
+            raise ValueError('Товар с нулевым количеством не может быть добавлен')
+
         self.after_init()
 
 
@@ -48,7 +53,12 @@ class Product(BaseProduct, PrintMixin):
         name = prod_wok['name']
         description = prod_wok['description']
         price = prod_wok['price']
-        quantity = prod_wok['quantity']
+
+        if prod_wok['quantity'] > 0:
+            quantity = prod_wok['quantity']
+        else:
+            raise ValueError('Товар с нулевым количеством не может быть добавлен')
+
         return cls(name, description, price, quantity)
 
 
